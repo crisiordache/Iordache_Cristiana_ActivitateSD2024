@@ -9,72 +9,48 @@ struct BatonCiocolata
 	int nrKcal;
 };
 
-void afisareBatonCiocolata(struct BatonCiocolata* bc)
+void afisareBatonCiocolata(struct BatonCiocolata bc)
 {
-	printf("\nMarca: ");
-	if (bc->marca != NULL)
-		printf(bc->marca);
-	else
-		printf("-");
-	printf("\nGramaj: %5.2f", bc->gramaj);
-	printf("\nNumarul de calorii: %d", bc->nrKcal);
-}
-
-struct BatonCiocolata citireBatonCiocolata()
-{
-	struct BatonCiocolata bc;
-	printf("\nIntroduceti marca: ");
-	bc.marca = (char*)malloc(50);
-	fgets(bc.marca, 50, stdin);
-	printf("\nIntroduceti gramajul: ");
-	scanf("%f", &bc.gramaj);
-	printf("\nIntroduceti numarul de calorii: ");
-	scanf("%i", &bc.nrKcal);
-	return bc;
-}
-
-float caloriiPerGram(struct BatonCiocolata* bc)
-{
-	return bc->nrKcal / bc->gramaj;
-}
-
-void schimbaMarca(struct BatonCiocolata* bc, const char* marca)
-{
-	if (marca != NULL)
-	{
-		free(bc->marca);
-		bc->marca = NULL;
-		bc->marca = (char*)malloc(strlen(marca) + 1);
-		strcpy(bc->marca, marca);
-		printf("\nNoua marca este %s", bc->marca);
-	}
-	else
-		printf("\nNu s-a produs nicio modificare");
+	printf("\nBatonul %s are %5.2f g si %d kcal", bc.marca, bc.gramaj, bc.nrKcal);
 }
 
 struct BatonCiocolata initializareBatonCiocolata(const char* marca, float gramaj, int nrKcal)
 {
 	struct BatonCiocolata bc;
-	if (marca != NULL)
-	{
-		bc.marca = (char*)malloc(strlen(marca) + 1);
-		strcpy(bc.marca, marca);
-	}
-	else
-	{
-		bc.marca = (char*)malloc(strlen("N/A") + 1);
-		strcpy(bc.marca, "N/A");
-	}
-	if (gramaj > 0)
-		bc.gramaj = gramaj;
-	else
-		bc.marcaj = 0;
-	if (nrKcal > 0)
-		bc.nrKcal = nrKcal;
-	else
-		bc.nrKcal = 0;
+	bc.marca = (char*)malloc(sizeof(char*) * (strlen(marca) + 1));
+	strcpy(bc.marca, marca);
+	bc.gramaj = gramaj;
+	bc.nrKcal = nrKcal;
 	return bc;
 }
+
+void afisareVectorBC(struct BatonCiocolata* vbc, int nrBC)
+{
+	for (int i = 0;i < nrBC;i ++)
+	{
+		afisareBatonCiocolata(vbc[i]);
+	}
+}
+
+struct BatonCiocolata* getBatoaneMari(struct BatoaneCiocolata* vbc, int nrBC, float cantitateMin, int* nrBMari)
+{
+	*nrBMari = 0;
+	for (int i = 0;i < nrBC;i++)
+	{
+		if (vbc[i].gramaj > cantitateMin)
+			(*nrBMari)++;
+	}
+	struct BatonCiocolata* bMari = (struct BatonCiocolata*)malloc(sizeof(struct BatonCiocolata) * (*nrBMari));
+	int index = 0;
+	for (int i = 0;i < nrBC;i++)
+	{
+		if (vbc[i].gramaj > cantitateMin)
+			bMari[index++] = initializareBatonCiocolata(vbc[i].marca, vbc[i].gramaj, vbc[i].nrKcal);
+	}
+	return bMari;
+}
+
+
 
 void dezalocareBatonCiocolata(struct BatonCiocolata* bc)
 {
@@ -91,5 +67,23 @@ int main()
 	bc1.nrKcal = 236;
 	struct BatonCiocolata bc2 = initializareBatonCiocolata("Snickers", 68.5, 291);
 	afisareBatonCiocolata(bc2);
+	struct BatonCiocolata bc3 = initializareBatonCiocolata("Twix", 53.2, 280);
+	struct BatonCiocolata bc4 = initializareBatonCiocolata("KitKat", 62, 237);
+	struct BatonCiocolata bc5 = initializareBatonCiocolata("Milky Way", 65.9, 321);
+	struct BatonCiocolata bc6 = initializareBatonCiocolata("Fagaras", 34.6, 210);
+	struct BatonCiocolata bc7 = initializareBatonCiocolata("Lion", 48, 276);
+	int nrBC = 7;
+	struct BatonCiocolata* vectorBC = (struct BatonCiocolata*)malloc(sizeof(struct BatonCiocolata) * nrBC);
+	vectorBC[0] = bc1;
+	vectorBC[1] = bc2;
+	vectorBC[2] = bc3;
+	vectorBC[3] = bc4;
+	vectorBC[4] = bc5;
+	vectorBC[5] = bc6;
+	vectorBC[6] = bc7;
+	afisareVectorBC(vectorBC, nrBC);
+	int nrBMari = 0;
+	struct BatonCiocolata* batoaneMari = getBatoaneMari(vectorBC, nrBC, 50, nrBMari);
+	afisareVectorBC(batoaneMari,nrBMari);
 	return 0;
 }
