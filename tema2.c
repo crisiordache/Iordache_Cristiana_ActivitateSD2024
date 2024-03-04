@@ -9,15 +9,15 @@ struct BatonCiocolata
 	int nrKcal;
 };
 
-void afisareBatonCiocolata(struct BatonCiocolata bc)
+void afisareBatonCiocolata(struct BatonCiocolata* bc)
 {
 	printf("\nMarca: ");
-	if (bc.marca != NULL)
-		printf(bc.marca);
+	if (bc->marca != NULL)
+		printf(bc->marca);
 	else
 		printf("-");
-	printf("\nGramaj: %5.2f", bc.gramaj);
-	printf("\nNumarul de calorii: %d", bc.nrKcal);
+	printf("\nGramaj: %5.2f", bc->gramaj);
+	printf("\nNumarul de calorii: %d", bc->nrKcal);
 }
 
 struct BatonCiocolata citireBatonCiocolata()
@@ -33,9 +33,9 @@ struct BatonCiocolata citireBatonCiocolata()
 	return bc;
 }
 
-float caloriiPerGram(struct BatonCiocolata bc)
+float caloriiPerGram(struct BatonCiocolata* bc)
 {
-	return bc.nrKcal / bc.gramaj;
+	return bc->nrKcal / bc->gramaj;
 }
 
 void schimbaMarca(struct BatonCiocolata* bc, const char* marca)
@@ -55,10 +55,24 @@ void schimbaMarca(struct BatonCiocolata* bc, const char* marca)
 struct BatonCiocolata initializareBatonCiocolata(const char* marca, float gramaj, int nrKcal)
 {
 	struct BatonCiocolata bc;
-	bc.marca = (char*)malloc(sizeof(char*) * (strlen(marca) + 1));
-	strcpy(bc.marca, marca);
-	bc.gramaj = gramaj;
-	bc.nrKcal = nrKcal;
+	if (marca != NULL)
+	{
+		bc.marca = (char*)malloc(strlen(marca) + 1);
+		strcpy(bc.marca, marca);
+	}
+	else
+	{
+		bc.marca = (char*)malloc(strlen("N/A") + 1);
+		strcpy(bc.marca, "N/A");
+	}
+	if (gramaj > 0)
+		bc.gramaj = gramaj;
+	else
+		bc.marcaj = 0;
+	if (nrKcal > 0)
+		bc.nrKcal = nrKcal;
+	else
+		bc.nrKcal = 0;
 	return bc;
 }
 
@@ -75,13 +89,7 @@ int main()
 	strcpy(bc1.marca, "Mars");
 	bc1.gramaj = 50.7;
 	bc1.nrKcal = 236;
-	afisareBatonCiocolata(bc1);
-	float val = caloriiPerGram(bc1);
-	printf("\nBatonul %s are %5.2f calorii per gram", bc1.marca, val);
-	schimbaMarca(&bc1, "Snickers");
-	struct BatonCiocolata bc2 = citireBatonCiocolata();
+	struct BatonCiocolata bc2 = initializareBatonCiocolata("Snickers", 68.5, 291);
 	afisareBatonCiocolata(bc2);
-	dezalocareBatonCiocolata(&bc1);
-	afisareBatonCiocolata(bc1);
 	return 0;
 }
