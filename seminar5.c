@@ -91,7 +91,7 @@ void stergereLista(Nod** lista) {
     (*lista) = NULL;
 }
 
-void stergereNod(int poz, Nod** lista) {
+void stergereNod(Nod** lista, int poz) {
     if (poz == 1) {
         Nod* nodSters = *lista;
         (*lista) = (*lista)->next;
@@ -116,6 +116,46 @@ void stergereNod(int poz, Nod** lista) {
     }
 }
 
+void interschimbareNoduri(Nod** lista, int poz1, int poz2) {
+    Nod* nod1 = *lista;
+    Nod* nod2 = *lista;
+    Nod* predecesor1 = NULL;
+    Nod* predecesor2 = NULL;
+
+    int i = 0;
+    while (nod1 != NULL && i < poz1-1) {
+        predecesor1 = nod1;
+        nod1 = nod1->next;
+        i++;
+    }
+    i = 0;
+    while (nod2 != NULL && i < poz2-1) {
+        predecesor2 = nod2;
+        nod2 = nod2->next;
+        i++;
+    }
+
+    if (nod1 == NULL || nod2 == NULL) {
+        printf("Nu exista ambele pozitii in lista");
+    } 
+    else {
+        if (predecesor1 != NULL)
+            predecesor1->next = nod2;
+        else
+            (*lista) = nod2;
+
+        if (predecesor2 != NULL)
+            predecesor2->next = nod1;
+        else
+            (*lista) = nod1;
+
+        Nod* aux = nod1->next;
+        nod1->next = nod2->next;
+        nod2->next = aux;
+    }
+}
+
+
 int main() {
 
     Nod* lista = NULL;
@@ -130,8 +170,11 @@ int main() {
     int totalM = totalMuncitori(lista);
     printf("\nTotal muncitori: %d", totalM);
     char* nume = numeDensitateMax(lista);
-    printf("\nNumele santierului cu densitatea maxima: %s \n==================\n", nume);
-    stergereNod(3, &lista);
+    printf("\nNumele santierului cu densitatea maxima: %s \n==========================\n", nume);
+    interschimbareNoduri(&lista, 2, 4);
+    afiseazaLista(lista);
+    printf("\n=========================\n");
+    stergereNod(&lista, 2);
     afiseazaLista(lista);
     stergereLista(&lista);
     afiseazaLista(lista);
