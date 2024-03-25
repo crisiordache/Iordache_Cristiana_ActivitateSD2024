@@ -127,7 +127,7 @@ int main()
 	int nrLinii = 3;
 	int* nrCol;
 	nrCol = (int*)malloc(sizeof(int) * nrLinii);
-	matrice = (struct Masina*)malloc(sizeof(struct Masina*) * nrLinii);
+	matrice = (struct Masina*)malloc(sizeof(struct Masina) * nrLinii);
 	for (int i = 0; i < nrLinii; i++)
 	{
 		nrCol[i] = 0;
